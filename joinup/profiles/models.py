@@ -39,5 +39,3 @@ def verify_email_profile(sender, instance, **kwargs):
     if not instance.pk:
         send_email_to_verify(instance.user.email, instance.user.username, settings.HOST)
         send_sms_to_verify(instance.user.email, instance.user.username, settings.HOST)
-    send_email_to_verify(instance.user.email, instance.user.username, settings.HOST)
-    send_sms_to_verify(instance.user.email, instance.user.username, settings.HOST)
