@@ -8,7 +8,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
 from joinup.utils.models import TrackModel
-from joinup.utils.verifications import send_email_to_verify, send_sms_to_verify
+from joinup.utils.tasks import send_mail
 
 
 
@@ -37,5 +37,4 @@ def save_profile(sender, instance, **kwargs):
 @receiver(pre_save, sender=Profile)
 def verify_email_profile(sender, instance, **kwargs):
     if not instance.pk:
-        send_email_to_verify(instance.user.email, instance.user.username, settings.HOST)
-        send_sms_to_verify(instance.user.email, instance.user.username, settings.HOST)
+        send_mail.delay(instance.user.email, instance.user.username, settings.HOST)

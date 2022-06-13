@@ -147,3 +147,14 @@ REST_FRAMEWORK = {
 HOST = 'http://127.0.0.1:8000'
 
 TWILIO_SECRET_KEY='super_secret_key_to_development'
+
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
