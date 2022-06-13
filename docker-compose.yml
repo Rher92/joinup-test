@@ -1,0 +1,39 @@
+version: '3'
+
+volumes:
+  backend_local_postgres_data: {}
+  backend_local_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: backend_local_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.django
+      - ./.envs/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/local/postgres/Dockerfile
+    image: backend_local_postgres
+    volumes:
+      - backend_local_postgres_data:/var/lib/postgresql/data:Z
+      - backend_local_postgres_data_backups:/backups:z
+    env_file:
+      - ./.envs/.postgres
+
+  smtp-server:
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'
